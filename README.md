@@ -1,59 +1,74 @@
 # Used Car Price Prediction
 
-Machine learning project for predicting used-car selling prices and comparing regression models.
+End-to-end machine learning project for predicting used-car selling prices, comparing regression models, analyzing prediction errors, and deploying an interactive web application with Streamlit.
 
-## Overview
+## Live Demo
 
-The project covers the complete regression workflow from data preprocessing to model evaluation and error analysis.
+Try the deployed application:
 
-### Models
+https://used-car-price-prediction-samak1234.streamlit.app/
+
+## Project Overview
+
+This project explores a complete regression workflow for estimating the resale value of used cars.
+
+It goes beyond training a single model and includes:
+
+- data cleaning
+- feature engineering
+- categorical encoding
+- model training
+- model comparison
+- prediction error analysis
+- residual analysis
+- overfitting analysis
+- basic hyperparameter experimentation
+- Streamlit application development
+- cloud deployment
+
+The deployed application allows users to enter vehicle details and generate estimated selling prices using different regression models.
+
+## Models
+
+The project currently includes:
+
 - Linear Regression
 - Decision Tree Regressor
 - Random Forest Regressor
 
-### Workflow
-- Data cleaning and duplicate removal
-- Categorical feature encoding
-- Feature engineering with `Car_Age`
-- Train/test splitting
-- Model training and comparison
-- Hyperparameter experimentation with Random Forest
-- Prediction error and residual analysis
+Each model is evaluated using the same regression metrics so their performance can be compared fairly.
 
-## Evaluation
+## Model Performance
 
-Models are compared using:
+Current results on the test split:
 
-- MAE
-- RMSE
-- R² Score
+| Model | MAE | RMSE | R² |
+|---|---:|---:|---:|
+| Linear Regression | 1.47 | 2.52 | 0.75 |
+| Decision Tree | 1.33 | 2.92 | 0.67 |
+| Random Forest | 1.41 | 3.32 | 0.57 |
 
-The project also analyzes the largest prediction errors and Linear Regression coefficients to better understand model behavior.
+Linear Regression currently gives the strongest overall performance based on RMSE and R².
 
-## Tech Stack
+Decision Tree produces the lowest MAE on the current split.
 
-Python · Pandas · Scikit-learn · Matplotlib
+These results are based on the current train/test split and are not treated as final model-selection conclusions. Cross-validation is planned as the next step for more reliable comparison.
 
-## Run
+## Features Used
 
-```bash
-git clone https://github.com/Samak1234/used-car-price-prediction.git
-cd used-car-price-prediction
-pip install pandas scikit-learn matplotlib
-python car_price_model.py
-```
+The models use the following input features:
 
-## Project Structure
+- Present Price
+- Kilometers Driven
+- Previous Owners
+- Car Age
+- Fuel Type
+- Seller Type
+- Transmission
+
+`Car_Name` is currently excluded from the model.
+
+The original `Year` feature is transformed into:
 
 ```text
-used-car-price-prediction/
-├── car_price_model.py
-├── car_prediction_data.csv
-├── metrics.py
-├── plots/
-└── README.md
-```
-
-## Status
-
-Currently improving model selection and preparing the model for deployment.
+Car_Age = Maximum Year in Dataset - Vehicle Year
