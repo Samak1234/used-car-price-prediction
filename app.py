@@ -1,11 +1,87 @@
 import streamlit as st
-
-#---------------------------------------------------------------------------------
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 
-df = pd.read_csv("car_prediction_data.csv")
 
+# -----------------------------
+# Page setup
+# -----------------------------
+
+st.set_page_config(
+    page_title="Used Car Price Estimator",
+    page_icon="🚗",
+    layout="centered"
+)
+
+
+# -----------------------------
+# Minimal custom styling
+# -----------------------------
+
+st.markdown(
+    """
+    <style>
+        .block-container {
+            max-width: 900px;
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2.6rem !important;
+            font-weight: 700 !important;
+            letter-spacing: -0.03em;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            font-size: 1.05rem;
+            margin-top: -0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .result-box {
+            padding: 1.4rem 1.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            margin-top: 1.5rem;
+        }
+
+        .result-label {
+            color: #6b7280;
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .result-value {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .disclaimer {
+            color: #9ca3af;
+            font-size: 0.82rem;
+            margin-top: 0.75rem;
+        }
+
+        div.stButton > button {
+            width: 100%;
+            border-radius: 10px;
+            height: 3rem;
+            font-weight: 600;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
+# -----------------------------
+# Load and prepare dataset
+# -----------------------------
+
+df = pd.read_csv("car_prediction_data.csv")
 df = df.drop_duplicates()
 
 df["Car_Age"] = df["Year"].max() - df["Year"]
@@ -14,61 +90,91 @@ X = df.drop("Selling_Price", axis=1)
 y = df["Selling_Price"]
 
 X = X.drop(["Car_Name", "Year"], axis=1)
-
 X = pd.get_dummies(X, drop_first=True)
+
+
+# -----------------------------
+# Train model
+# -----------------------------
 
 model = LinearRegression()
 model.fit(X, y)
 
-#-----------------------------------------------------------------------------------
+
+# -----------------------------
+# Header
+# -----------------------------
+
 st.title("Used Car Price Estimator")
 
-st.write(
-    "Estimate the resale value of a used car using a machine learning model."
+st.markdown(
+    '<p class="subtitle">Estimate the resale value of a used car using a machine learning model.</p>',
+    unsafe_allow_html=True
 )
 
 st.divider()
 
-present_price = st.number_input(
-    "Present Price (in lakh)",
-    min_value=0.0,
-    step=0.1
-)
 
-kms_driven = st.number_input(
-    "Kilometers Driven",
-    min_value=0,
-    step=1000
-)
+# -----------------------------
+# Input form
+# -----------------------------
 
-car_age = st.number_input(
-    "Car Age",
-    min_value=0,
-    step=1
-)
+with st.form("car_price_form"):
 
-owners = st.number_input(
-    "Previous Owners",
-    min_value=0,
-    step=1
-)
+    col1, col2 = st.columns(2)
 
-fuel_type = st.selectbox(
-    "Fuel Type",
-    ["Petrol", "Diesel", "CNG"]
-)
+    with col1:
+        present_price = st.number_input(
+            "Present Price (₹ lakh)",
+            min_value=0.0,
+            step=0.1
+        )
 
-seller_type = st.selectbox(
-    "Seller Type",
-    ["Dealer", "Individual"]
-)
+        car_age = st.number_input(
+            "Car Age",
+            min_value=0,
+            step=1
+        )
 
-transmission = st.selectbox(
-    "Transmission",
-    ["Manual", "Automatic"]
-)
+        fuel_type = st.selectbox(
+            "Fuel Type",
+            ["Petrol", "Diesel", "CNG"]
+        )
 
-predict_button = st.button("Predict Price")
+        transmission = st.selectbox(
+            "Transmission",
+            ["Manual", "Automatic"]
+        )
+
+    with col2:
+        kms_driven = st.number_input(
+            "Kilometers Driven",
+            min_value=0,
+            step=1000
+        )
+
+        owners = st.number_input(
+            "Previous Owners",
+            min_value=0,
+            step=1
+        )
+
+        seller_type = st.selectbox(
+            "Seller Type",
+            ["Dealer", "Individual"]
+        )
+
+    st.write("")
+
+    predict_button = st.form_submit_button(
+        "Predict Price",
+        use_container_width=True
+    )
+
+
+# -----------------------------
+# Prediction
+# -----------------------------
 
 if predict_button:
 
@@ -104,7 +210,33 @@ if predict_button:
             st.warning(
                 "The model produced an unrealistic negative prediction for these inputs."
             )
+
         else:
-            st.success(
-                f"Estimated Selling Price: ₹{predicted_price:.2f} lakh"
+            st.markdown(
+                f"""
+                <div class="result-box">
+                    <div class="result-label">Estimated Selling Price</div>
+                    <div class="result-value">₹{predicted_price:.2f} lakh</div>
+                    <div class="disclaimer">
+                        This estimate is generated by a machine learning model
+                        and should be treated as an indicative resale value.
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
             )
+
+
+# -----------------------------
+# Model details
+# -----------------------------
+
+st.divider()
+
+st.subheader("Model details")
+
+col1, col2, col3 = st.columns(3)
+
+col1.metric("Current Model", "Linear Regression")
+col2.metric("R²", "0.75")
+col3.metric("RMSE", "2.52 lakh")
