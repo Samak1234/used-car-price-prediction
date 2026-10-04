@@ -8,6 +8,8 @@ Try the deployed application:
 
 https://used-car-price-prediction-samak1234.streamlit.app/
 
+![Used Car Price Prediction App](plots/streamlit_app_demo.png)
+
 ## Project Overview
 
 This project explores a complete regression workflow for estimating the resale value of used cars.
