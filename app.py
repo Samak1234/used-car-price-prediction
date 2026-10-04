@@ -1,5 +1,26 @@
 import streamlit as st
 
+#---------------------------------------------------------------------------------
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+
+df = pd.read_csv("car_prediction_data.csv")
+
+df = df.drop_duplicates()
+
+df["Car_Age"] = df["Year"].max() - df["Year"]
+
+X = df.drop("Selling_Price", axis=1)
+y = df["Selling_Price"]
+
+X = X.drop(["Car_Name", "Year"], axis=1)
+
+X = pd.get_dummies(X, drop_first=True)
+
+model = LinearRegression()
+model.fit(X, y)
+
+#-----------------------------------------------------------------------------------
 st.title("Used Car Price Estimator")
 
 st.write(
@@ -50,4 +71,20 @@ transmission = st.selectbox(
 predict_button = st.button("Predict Price")
 
 if predict_button:
-    st.success("Form submitted successfully.")
+
+    input_data = pd.DataFrame({
+        "Present_Price": [present_price],
+        "Kms_Driven": [kms_driven],
+        "Owner": [owners],
+        "Car_Age": [car_age],
+        "Fuel_Type_Diesel": [fuel_type == "Diesel"],
+        "Fuel_Type_Petrol": [fuel_type == "Petrol"],
+        "Seller_Type_Individual": [seller_type == "Individual"],
+        "Transmission_Manual": [transmission == "Manual"]
+    })
+
+    predicted_price = model.predict(input_data)[0]
+
+    st.success(
+        f"Estimated Selling Price: ₹{predicted_price:.2f} lakh"
+    )
