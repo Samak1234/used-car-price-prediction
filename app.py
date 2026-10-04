@@ -72,19 +72,39 @@ predict_button = st.button("Predict Price")
 
 if predict_button:
 
-    input_data = pd.DataFrame({
-        "Present_Price": [present_price],
-        "Kms_Driven": [kms_driven],
-        "Owner": [owners],
-        "Car_Age": [car_age],
-        "Fuel_Type_Diesel": [fuel_type == "Diesel"],
-        "Fuel_Type_Petrol": [fuel_type == "Petrol"],
-        "Seller_Type_Individual": [seller_type == "Individual"],
-        "Transmission_Manual": [transmission == "Manual"]
-    })
+    if present_price <= 0:
+        st.error("Present price must be greater than 0.")
 
-    predicted_price = model.predict(input_data)[0]
+    elif kms_driven < 0:
+        st.error("Kilometers driven cannot be negative.")
 
-    st.success(
-        f"Estimated Selling Price: ₹{predicted_price:.2f} lakh"
-    )
+    elif car_age < 0:
+        st.error("Car age cannot be negative.")
+
+    elif owners < 0:
+        st.error("Number of owners cannot be negative.")
+
+    else:
+        input_data = pd.DataFrame({
+            "Present_Price": [present_price],
+            "Kms_Driven": [kms_driven],
+            "Owner": [owners],
+            "Car_Age": [car_age],
+            "Fuel_Type_Diesel": [fuel_type == "Diesel"],
+            "Fuel_Type_Petrol": [fuel_type == "Petrol"],
+            "Seller_Type_Individual": [seller_type == "Individual"],
+            "Transmission_Manual": [transmission == "Manual"]
+        })
+
+        input_data = input_data[X.columns]
+
+        predicted_price = model.predict(input_data)[0]
+
+        if predicted_price < 0:
+            st.warning(
+                "The model produced an unrealistic negative prediction for these inputs."
+            )
+        else:
+            st.success(
+                f"Estimated Selling Price: ₹{predicted_price:.2f} lakh"
+            )
