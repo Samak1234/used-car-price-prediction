@@ -326,6 +326,22 @@ for depth in [3, 5, 7, 10, None]:
     print("RMSE:", forest_rmse)
     print("R² Score:", forest_r2)
 
+# -----------------------------
+# Random Forest Cross-Validation
+# -----------------------------
+
+forest_cv_scores = cross_val_score(
+    RandomForestRegressor(random_state=42),
+    X,
+    y,
+    cv=kf,
+    scoring="r2"
+)
+
+print("\nRandom Forest 5-Fold Cross-Validation R² Scores:")
+print(forest_cv_scores)
+
+print("Average R²:", forest_cv_scores.mean())
 
 # -----------------------------
 # Model Comparison
