@@ -7,7 +7,7 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import cross_val_score
-
+from sklearn.model_selection import KFold
 
 
 
@@ -131,6 +131,25 @@ print("MAE:", mae)
 print("MSE:", mse)
 print("RMSE:", rmse)
 print("R² Score:", r2)
+
+
+# -----------------------------
+# Linear Regression Cross-Validation
+# -----------------------------
+
+linear_cv_scores = cross_val_score(
+    LinearRegression(),
+    X,
+    y,
+    cv=5,
+    scoring="r2"
+)
+
+print("\nLinear Regression 5-Fold Cross-Validation R² Scores:")
+print(linear_cv_scores)
+
+print("Average R²:", linear_cv_scores.mean())
+
 
 
 # Calculate prediction errors
