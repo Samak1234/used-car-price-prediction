@@ -132,16 +132,21 @@ print("MSE:", mse)
 print("RMSE:", rmse)
 print("R² Score:", r2)
 
-
 # -----------------------------
 # Linear Regression Cross-Validation
 # -----------------------------
+
+kf = KFold(
+    n_splits=5,
+    shuffle=True,
+    random_state=42
+)
 
 linear_cv_scores = cross_val_score(
     LinearRegression(),
     X,
     y,
-    cv=5,
+    cv=kf,
     scoring="r2"
 )
 
@@ -149,7 +154,6 @@ print("\nLinear Regression 5-Fold Cross-Validation R² Scores:")
 print(linear_cv_scores)
 
 print("Average R²:", linear_cv_scores.mean())
-
 
 
 # Calculate prediction errors
