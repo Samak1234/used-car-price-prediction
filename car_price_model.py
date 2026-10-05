@@ -285,6 +285,23 @@ print("RMSE:", tree_rmse)
 print("R² Score:", tree_r2)
 
 # -----------------------------
+# Decision Tree Cross-Validation
+# -----------------------------
+
+tree_cv_scores = cross_val_score(
+    DecisionTreeRegressor(random_state=42),
+    X,
+    y,
+    cv=kf,
+    scoring="r2"
+)
+
+print("\nDecision Tree 5-Fold Cross-Validation R² Scores:")
+print(tree_cv_scores)
+
+print("Average R²:", tree_cv_scores.mean())
+
+# -----------------------------
 # Random Forest max_depth comparison
 # -----------------------------
 
