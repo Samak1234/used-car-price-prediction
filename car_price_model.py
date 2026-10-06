@@ -22,6 +22,11 @@ print(df.columns)
 df.info()
 
 
+
+
+
+
+
 # Check for missing values
 print("\nMissing values:")
 print(df.isnull().sum())
@@ -42,6 +47,15 @@ df = df.drop_duplicates()
 print("\nDataset shape after removing duplicates:")
 print(df.shape)
 
+# Inspect Car_Name cardinality
+print("\nNumber of unique car names:")
+print(df["Car_Name"].nunique())
+
+print("\nCar name frequency:")
+print(df["Car_Name"].value_counts())
+
+print("\nNumber of car names appearing only once:")
+print((df["Car_Name"].value_counts() == 1).sum())
 
 # Create Car_Age feature
 df["Car_Age"] = df["Year"].max() - df["Year"]
