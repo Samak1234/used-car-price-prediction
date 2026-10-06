@@ -84,10 +84,9 @@ print(X.head())
 print("\nTarget:")
 print(y.head())
 
-
-# Remove Car_Name and Year
-# Keep Car_Name_Grouped so it can be one-hot encoded
-X = X.drop(["Car_Name", "Year"], axis=1)
+# Remove Car_Name features and Year
+# Car_Name_Grouped was tested but did not improve cross-validation performance
+X = X.drop(["Car_Name", "Car_Name_Grouped", "Year"], axis=1)
 
 print("\nFeatures after removing Car_Name and Year:")
 print(X.head())
