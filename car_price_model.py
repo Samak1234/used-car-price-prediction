@@ -22,11 +22,6 @@ print(df.columns)
 df.info()
 
 
-
-
-
-
-
 # Check for missing values
 print("\nMissing values:")
 print(df.isnull().sum())
@@ -52,7 +47,8 @@ print("\nNumber of unique car names:")
 print(df["Car_Name"].nunique())
 
 print("\nCar name frequency:")
-print(df["Car_Name"].value_counts())
+print(df["Car_Name"].value_counts().to_string())
+
 
 print("\nNumber of car names appearing only once:")
 print((df["Car_Name"].value_counts() == 1).sum())
