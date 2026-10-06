@@ -53,6 +53,20 @@ print(df["Car_Name"].value_counts().to_string())
 print("\nNumber of car names appearing only once:")
 print((df["Car_Name"].value_counts() == 1).sum())
 
+# Group rare car names
+car_name_counts = df["Car_Name"].value_counts()
+
+df["Car_Name_Grouped"] = df["Car_Name"].where(
+    df["Car_Name"].map(car_name_counts) >= 3,
+    "Other"
+)
+
+print("\nGrouped car name frequency:")
+print(df["Car_Name_Grouped"].value_counts().to_string())
+
+print("\nNumber of grouped car name categories:")
+print(df["Car_Name_Grouped"].nunique())
+
 # Create Car_Age feature
 df["Car_Age"] = df["Year"].max() - df["Year"]
 
@@ -72,6 +86,7 @@ print(y.head())
 
 
 # Remove Car_Name and Year
+# Keep Car_Name_Grouped so it can be one-hot encoded
 X = X.drop(["Car_Name", "Year"], axis=1)
 
 print("\nFeatures after removing Car_Name and Year:")
