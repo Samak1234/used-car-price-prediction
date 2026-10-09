@@ -53,7 +53,7 @@ print(df["Car_Name"].value_counts().to_string())
 print("\nNumber of car names appearing only once:")
 print((df["Car_Name"].value_counts() == 1).sum())
 
-# Group rare car names
+# Group car names appearing fewer than 3 times as "Other"
 car_name_counts = df["Car_Name"].value_counts()
 
 df["Car_Name_Grouped"] = df["Car_Name"].where(
